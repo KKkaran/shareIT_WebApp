@@ -15,7 +15,7 @@ export const Login = () => {
       ...credentials,
       [e.target.name]: e?.target?.value,
     });
-  }, 2000);
+  }, 500);
 
   const onSubmitLogin = (e) => {
     e.preventDefault();
