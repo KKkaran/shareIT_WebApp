@@ -5,10 +5,16 @@ const path = require("path");
 require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 const app = express();
+const mongoose = require("mongoose");
+const connectDB = require("./config/dbConn");
+
+//connect to mongodb
+connectDB();
 
 //middleware
 app.use(express.urlencoded({ extended: false }));
-app.use('/v1/home', require('./routes/public/authentication'))
+app.use(express.json());
+app.use("/v1/home", require("./routes/public/authentication"));
 app.use("/v1/users", require("./routes/secure/users"));
 app.use("/v1/purchases", require("./routes/secure/purchases"));
 app.use("/v1/homes", require("./routes/secure/homes"));
@@ -40,7 +46,6 @@ app.use("/v1/homes", require("./routes/secure/homes"));
 
 // routes go below
 
-
 app.get(
   "/*",
   (req, res, next) => {
@@ -53,6 +58,9 @@ app.get(
 );
 
 //listening on PORT
-app.listen(PORT, function () {
-  console.log(`app running on ${PORT} port`);
+mongoose.connection.once("open", () => {
+  console.log("Conected to DB");
+  app.listen(PORT, function () {
+    console.log(`app running on ${PORT} port`);
+  });
 });
